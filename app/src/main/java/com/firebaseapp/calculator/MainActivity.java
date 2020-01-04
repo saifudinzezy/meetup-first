@@ -8,63 +8,47 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class MainActivity extends AppCompatActivity {
-    EditText edt1, edt2;
-    Button btnPlus, btnMinus, btnDivision, btnMultipication;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
+public class MainActivity extends AppCompatActivity implements IView{
+    @BindView(R.id.edt_1)
+    EditText edt1;
+    @BindView(R.id.edt_2)
+    EditText edt2;
+    @BindView(R.id.result)
     TextView result;
+
+    CalculatorPresenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
 
-        //instantiate / inisialisati
-        //button
-        btnPlus = findViewById(R.id.btn_plus);
-        btnMinus = findViewById(R.id.btn_minus);
-        btnDivision = findViewById(R.id.btn_division);
-        btnMultipication = findViewById(R.id.btn_multiplication);
-        //textview
-        result = findViewById(R.id.result);
-        //edittext
-        edt1 = findViewById(R.id.edt_1);
-        edt2 = findViewById(R.id.edt_2);
+        presenter = new CalculatorPresenter(this);
+    }
 
-        //create event onClick
-        btnPlus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int value1 = Integer.parseInt(edt1.getText().toString());
-                int value2 = Integer.parseInt(edt2.getText().toString());
-                result.setText("Hasil : "+(value1 + value2));
-            }
-        });
+    @OnClick({R.id.btn_plus, R.id.btn_minus, R.id.btn_multiplication, R.id.btn_division})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.btn_plus:
+                presenter.plus(edt1.getText().toString(), edt2.getText().toString());
+                break;
+            case R.id.btn_minus:
+                break;
+            case R.id.btn_multiplication:
+                break;
+            case R.id.btn_division:
+                break;
+        }
+    }
 
-        btnMinus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int value1 = Integer.parseInt(edt1.getText().toString());
-                int value2 = Integer.parseInt(edt2.getText().toString());
-                result.setText("Hasil : "+(value1 - value2));
-            }
-        });
-
-        btnDivision.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int value1 = Integer.parseInt(edt1.getText().toString());
-                int value2 = Integer.parseInt(edt2.getText().toString());
-                result.setText("Hasil : "+(value1 / value2));
-            }
-        });
-
-        btnMultipication.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int value1 = Integer.parseInt(edt1.getText().toString());
-                int value2 = Integer.parseInt(edt2.getText().toString());
-                result.setText("Hasil : "+(value1 * value2));
-            }
-        });
+    @Override
+    public int result(int result) {
+        this.result.setText("Hasil : "+result);
+        return result;
     }
 }
